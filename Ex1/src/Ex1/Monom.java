@@ -1,4 +1,4 @@
-package myMath;
+package Ex1;
 
 import java.util.Comparator;
 
@@ -18,6 +18,8 @@ import java.util.Comparator;
  * @author Meir Nizri and Avihay Bernholtz
  */
 public class Monom implements function {
+	/**   *   */
+	private static final long serialVersionUID = 1L;
 	private double _coefficient;	
 	private int _power;
 	
@@ -33,7 +35,6 @@ public class Monom implements function {
 	/** The Constant _Comp. */
 	public static final Comparator<Monom> _Comp = new Monom_Comperator();
 
-	
 	/**
 	 * Gets the comperator.
 	 * @return the comperator
@@ -160,7 +161,10 @@ public class Monom implements function {
 		// Turn coefStr to double and powStr to integer;
 		try {
 			this.set_coefficient(Double.parseDouble(coefStr));
-			this.set_power(Integer.parseInt(powStr));
+			if(this.get_coefficient()==0)
+				this.set_power(0);
+			else
+				this.set_power(Integer.parseInt(powStr));
 		}
 		catch (NumberFormatException e){
             throw new NumberFormatException("ERR: got wrong format String for Monom");
@@ -225,15 +229,34 @@ public class Monom implements function {
 	 * @param d the d
 	 * @return true, if successful
 	 */
-	public boolean equals(Monom d) {
-		//If the coefficients in the range of Epsilon - return true
-		boolean eqCoef = Math.abs(this.get_coefficient() - d.get_coefficient()) < EPSILON;
-		boolean eqPow = this.get_power() == d.get_power();
-		//If one of the coefficients equals 0 and the other in epsilon range from it - return true
-		if (this.get_coefficient() == 0 || d.get_coefficient()==0) 
-			return (eqCoef);
-		else
-			return (eqCoef && eqPow);
+	public boolean equals(Object obj) {
+		try {
+			Monom d = new Monom(obj.toString());
+			
+			//If the coefficients in the range of Epsilon - return true
+			boolean eqCoef = ((Math.abs(this.get_coefficient() - d.get_coefficient())) < EPSILON);
+			boolean eqPow = (this.get_power() == d.get_power());
+			//If one of the coefficients equals 0 and the other in epsilon range from it - return true
+			if (this.get_coefficient() == 0 || d.get_coefficient()==0) 
+				return (eqCoef);
+			else
+				return (eqCoef && eqPow);
+		}
+		catch (NumberFormatException e){
+			return false;
+		}
+	}
+
+	@Override
+	public function initFromString(String s) {
+		function f = new Monom(s);
+		return f;
+	}
+
+	@Override
+	public function copy() {
+		function f = new Monom(this.toString());
+		return f;
 	}
 
 	// ****************** Private Methods and Data *****************

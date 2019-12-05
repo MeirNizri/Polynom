@@ -1,8 +1,9 @@
-package myMath;
+package Ex1;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+// TODO: Auto-generated Javadoc
 /**
  * This  class represents a general Polynom: f(x) = a_1X^b_1 + a_2*X^b_2 +...+ a_n*Xb_n,
  * where: a_1, a_2 ... a_n are real numbers and b_1, b_2 ... b_n are integer (summed a none negative).
@@ -22,9 +23,9 @@ import java.util.Iterator;
  */
 public class Polynom implements Polynom_able {
 
-	/** 
-	 * The monoms in the Polynom
-	 */
+	/**   *   */
+	private static final long serialVersionUID = 1L;
+	/**   The monoms in the Polynom. */
 	private ArrayList<Monom> monoms = new ArrayList<Monom>();
 
 	/**
@@ -84,9 +85,20 @@ public class Polynom implements Polynom_able {
 		if (lastElem.isZero() && monoms.size() > 1)
 			monoms.remove(monoms.size() - 1);
 	}
+	
+	/**
+	 * Initial Polynom from string.
+	 * @param s String representation of Polynom.
+	 * @return function
+	 */
+	@Override
+	public function initFromString(String s) {
+		function f = new Polynom(s);
+		return f;
+	}
 
 	/**
-	 * find the iterator of the polynom, which is a pointer to the start of the polynom
+	 * find the iterator of the polynom, which is a pointer to the start of the polynom.
 	 * @return an iterator of this Polynom
 	 */
 	@Override
@@ -95,8 +107,8 @@ public class Polynom implements Polynom_able {
 	}
 
 	/**
-	 * print the polynom 
-	 * @return string representation of the polynom
+	 * print the polynom .
+	 * @return string representation of the Polynom
 	 */
 	@Override
 	public String toString() {
@@ -137,20 +149,27 @@ public class Polynom implements Polynom_able {
 	 * @return true iff this polynom represents the same function as p1
 	 */
 	@Override
-	public boolean equals(Polynom_able p1) {
-		// traverse p1 and this Polynom with iterator equally
-		Iterator<Monom> itr1 = p1.iteretor();
-		Iterator<Monom> itr2 = this.iteretor();
-		while (itr1.hasNext() && itr2.hasNext()) {
-			Monom elem1 = itr1.next();
-			Monom elem2 = itr2.next();
-			if (!elem1.equals(elem2))
-				return false;
+	public boolean equals (Object p1) {
+		try {
+			Polynom p2 = new Polynom(p1.toString());
+			
+			// traverse p2 and this Polynom with iterator equally
+			Iterator<Monom> itr1 = this.iteretor();
+			Iterator<Monom> itr2 = p2.iteretor();
+			while (itr1.hasNext() && itr2.hasNext()) {
+				Monom elem1 = itr1.next();
+				Monom elem2 = itr2.next();
+				if (!elem1.equals(elem2))
+					return false;
+			}
+			//one Polynom is longer from the other
+			if(itr1.hasNext() || itr2.hasNext())
+					return false;
+			return true;
 		}
-		//one Polynom is longer from the other
-		if(itr1.hasNext() || itr2.hasNext())
-				return false;
-		return true;
+		catch (NumberFormatException e){
+            return false;
+		}		
 	}
 
 	/**
@@ -266,7 +285,8 @@ public class Polynom implements Polynom_able {
 	}
 
 	/**
-	 * calculate the value of the polynom when inserted value of x
+	 * calculate the value of the polynom when inserted value of x.
+	 *
 	 * @param x double
 	 * @return the value of the polynom
 	 */
@@ -286,11 +306,12 @@ public class Polynom implements Polynom_able {
 	 * assuming (f(x0)*f(x1)<=0, else should throws runtimeException 
 	 * computes f(x') such that:
 	 * 	(i) x0<=x'<=x1 && 
-	 * 	(ii) |f(x')|<eps
+	 * 	(ii) |f(x')|<eps.
+	 *
 	 * @param x0 starting point
 	 * @param x1 end point
-	 * @param eps>0 (positive) representing the epsilon range the solution should be within.
-	 * @return an approximated value (root) for this (cont.) function 
+	 * @param eps the eps
+	 * @return an approximated value (root) for this (cont.) function
 	 */
 	@Override 
 	public double root(double x0, double x1, double eps) {
@@ -321,6 +342,8 @@ public class Polynom implements Polynom_able {
 	 */
 	@Override
 	public double area(double x0, double x1, double eps) {
+		if(x0 > x1)
+			throw new IllegalArgumentException("you entered x0>x1, should be x0<x1");
 		double ans = 0.0, value = 0.0;
 		for (double i = x0; i < x1; i += eps) {
 			//sum all the rectangles from the x axis to f(i) when f(i)>0

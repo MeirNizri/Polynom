@@ -1,227 +1,144 @@
-package myMath;
-import java.util.ArrayList;
-/**
- * This class represents a simple (naive) tester for the Monom class, 
- * Note: <br>
- * (i) The class is NOT a JUNIT - (i.e., educational reasons) - should be changed to a proper JUnit in Ex1. <br>
- * (ii) This tester should be extend in order to test ALL the methods and functionality of the Monom class.  <br>
- * (iii) Expected output:  <br>
- * *****  Test1:  *****  <br>
-0) 2.0    	isZero: false	 f(0) = 2.0  <br>
-1) -1.0x    	isZero: false	 f(1) = -1.0  <br>
-2) -3.2x^2    	isZero: false	 f(2) = -12.8  <br>
-3) 0    	isZero: true	 f(3) = 0.0  <br>
- *****  Test2:  *****  <br>
-0) 0    	isZero: true  	eq: true  <br>
-1) -1.0    	isZero: false  	eq: true  <br>
-2) -1.3x    	isZero: false  	eq: true  <br>
-3) -2.2x^2    	isZero: false  	eq: true  <br>
- */
-public class MonomTest {
-	
-	public static void main(String[] args) {
-		monomContructorTest();
-		monomStringConstructorTest();
-		monomFuncTest();
-		monomAddTest();
-		monomMultiTest();
-		monomDerivativeTest();
-		monomToStringTest();
-		monomEqualsTest();
-		test1();
-		test2();
-	}
-	private static void monomContructorTest() {
+package Ex1Testing;
 
-		//default constructor
-		Monom example1 = new Monom();
-		if (example1.get_coefficient() != 0 || example1.get_power() != 0)
-			System.out.println("error: default constructor");
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import Ex1.Monom;
+import Ex1.function;
 
-		//constructor
-		Monom example2 = new Monom(2, 5);
-		Monom example3 = new Monom((1.0 / 4), 2);
+class MonomTest {
 
-		if (example2.get_coefficient() != 2 || example2.get_power() != 5 ||
-				example3.get_coefficient() != 0.25 || example3.get_power() != 2)
-			System.out.println("error: constructor");
-
-		boolean flag = false;
-		try {                                         //test wither the constractor throwes exception
-			@SuppressWarnings("unused")
-			Monom example4 = new Monom(1, -2);    //when power values are negative.
-		} catch (RuntimeException e) {
-			flag = true;
-		}
-
-		if (!flag)
-			System.out.println("error: constructor (exception)");
-
-		//copy constructor
-		Monom example7 = new Monom(example1);
-		Monom example8 = new Monom(example2);
-		Monom example9 = new Monom(example3);
-
-		if (example7.get_coefficient() != 0 || example7.get_power() != 0 ||
-				example8.get_coefficient() != 2 || example8.get_power() != 5 ||
-				example9.get_coefficient() != 0.25 || example9.get_power() != 2)
-			System.out.println("error: copy constructor");
+	@Test
+	void testMonom() {
+		Monom expected = new Monom();
+		Monom actual = new Monom(0,0);
+		assertEquals(actual, expected);
 	}
 
-	private static void monomFuncTest() {
-		//test if the calculation is right for random power and coefficient.
-		Monom example1 = new Monom(4.0 / 5, 4);
-		//test if the calculation for the power of 0 is right.
-		Monom example2 = new Monom(4.0 / 5, 0);
-		if (example1.f(2) != 12.8 || example2.f(2) != 0.8)
-			System.out.println("error: function f calculation ");
-	}
-
-	private static void monomAddTest () {
-		Monom example1 = new Monom(1, 3);
-		Monom example2 = new Monom(2, 3);
-		Monom example3 = new Monom(3, 0);
-		Monom example4 = new Monom(0.25, 7);
-
-		boolean flag = false;
+	@Test
+	void testMonomDoubleInt() {
+		Monom expected = new Monom((4.0/5), 4);
+		Monom actual = new Monom(expected.get_coefficient(),expected.get_power());
+		assertEquals(actual, expected);
+		
+		//when power value are negative
 		try {
-			example1.add(example4);
-		} catch (RuntimeException e) {
-			flag = true;
-		}
-
-		example1.add(example2);
-		example3.add(example3);
-
-		if (!flag
-				|| example1.get_power() != 3
-				|| example1.get_coefficient() != 3
-				|| example3.get_coefficient() != 6
-				|| example3.get_power() != 0)
-			System.out.println("error: Monom func add");
+			@SuppressWarnings("unused")
+			Monom toFail = new Monom(1,-2);
+		    fail("the constructor didn't throw exception for negative power");
+		} 
+		catch (RuntimeException e) {}
 	}
 
-	@SuppressWarnings("unused")
-	private static void monomStringConstructorTest () {
-		String [] good = {"","7 x","-x","4.78","3.9x^71"};
-		String [] bad = {"%$","2^3", "X","xX","(4","x32","--3X"};
+	@Test
+	void testMonomMonom() {
+		Monom expected = new Monom((4.0/5), 4);
+		Monom actual = new Monom(expected);
+		assertEquals(actual, expected);
+	}
 
-		for(int i=0; i<good.length; i++) {
-			String c = good[i];
-			Monom m = new Monom (c);
+	@Test
+	void testDerivative() {
+		Monom m = new Monom((4.0/5), 4);
+		Monom actual = m.derivative();
+		Monom expected = new Monom((4*4.0/5), 3);
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	void testF() {
+		Monom m = new Monom(4.0/5, 4);
+		double actual = m.f(11.19);
+		double expected = (4.0/5.0) * Math.pow(11.19, 4);
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	void testIsZero() {
+		Monom m = new Monom();
+		boolean isTrue = m.isZero(); 
+		assertTrue(isTrue);
+	}
+
+	@Test
+	void testMonomString() {
+		String [] goodStrings = {"","7 x","-x","4.78","0x^3","3.9x^71"};
+		Monom [] expected = {new Monom(), new Monom(7,1), new Monom(-1,1), new Monom(4.78,0), new Monom(), new Monom(3.9,71)};
+		for(int i=0; i<expected.length; i++) {
+			Monom actual = new Monom(goodStrings[i]);
+			assertEquals(actual, expected[i]);
 		}
-		for(int i=0; i<bad.length; i++) {
-			String c = bad[i];
-			boolean ok = true;
+		
+		String [] badString = {"%$","2^3", "X","xX","(4","x32","--3X"};
+		for(int i=0; i<badString.length; i++) {
 			try {
-				Monom m = new Monom (c);
-			}
-			catch (Exception e) {
-				ok = false;
-			}
-			if (ok) {
-				System.out.println("error: bad String " + c + " was excepted");
-			}
+				@SuppressWarnings("unused")
+				Monom toFail = new Monom(badString[i]);
+			    fail( "the constructor didn't throw exception for bad String" + badString[i]);
+			} 
+			catch (RuntimeException e) {}
+		}	
+	}
+
+	@Test
+	void testAdd() {
+		Monom m = new Monom(1, 3);
+		Monom actual = new Monom(2, 3);
+		actual.add(m);
+		Monom expected = new Monom(3, 3);
+		assertEquals(actual, expected);
+		
+		//when add monoms with different power
+		try {
+			Monom toFail = new Monom(2, 4);
+			toFail.add(m);
+		    fail("add didn't throw exception for different power");
+		} 
+		catch (RuntimeException e) {}
+	}
+
+	@Test
+	void testMultiply() {
+		Monom m = new Monom(1, 3);
+		Monom actual = new Monom(2, 3);
+		actual.multiply(m);
+		Monom expected = new Monom(2, 6);
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	void testToString() {
+		Monom [] monoms = {new Monom(), new Monom(7,1), new Monom(-1,2), new Monom(4.78,0), new Monom(3.9,71)};
+		String [] expected = {"0","7.0x","-x^2","4.78","3.9x^71"};
+		for(int i=0; i<expected.length; i++) {
+			String actual = monoms[i].toString();
+			assertEquals(actual, expected[i]);
 		}
 	}
 
-	public static void monomMultiTest() {
-		Monom m0 = new Monom ();
-		Monom m1 = new Monom (2,2);
-		Monom m2 = new Monom (3,2);
-		Monom m3 = new Monom (5,3);
-
-		m0.multiply(m1);
-		m1.multiply(m2);
-		m2.multiply(m3);
-
-		if (m0.get_coefficient() != 0 ||
-				m1.get_coefficient() != 6 || m1.get_power() != 4 ||
-				m2.get_coefficient() != 15 || m2.get_power() != 5)
-			System.out.println("error: monom func multiply");
-
-	}
-
-	public static void monomDerivativeTest() {
-		Monom m0 = new Monom ();
-		Monom m1 = new Monom (2,1);
-		Monom m2 = new Monom (3,2);
-		Monom m3 = new Monom (5,3);
-
-		Monom d0 = m0.derivative();
-		Monom d1 = m1.derivative();
-		Monom d2 = m2.derivative();
-		Monom d3 = m3.derivative();
-
-		if(d0.get_coefficient() != 0 || d0.get_power() != 0
-				|| d1.get_coefficient() != 2 || d1.get_power() != 0
-				|| d2.get_coefficient() != 6 || d2.get_power() != 1
-				|| d3.get_coefficient() != 15 || d3.get_power() != 2) {
-			System.out.println("error: monom func derivative");
-		}
-
-	}
-
-	public static void monomToStringTest() {
-		Monom m0 = new Monom ();
-		Monom m1 = new Monom (0,1);
-		Monom m2 = new Monom (5,0);
-		Monom m3 = new Monom (1,2);
-		Monom m4 = new Monom (5,1);
-		Monom m5 = new Monom (5,3);
-
-		String a = m0.toString();
-		String b = m1.toString();
-		String c = m2.toString();
-		String d = m3.toString();
-		String e = m4.toString();
-		String f = m5.toString();
-
-		if(!a.equals("0")
-				|| !b.equals("0")
-				|| !c.equals("5.0")
-				|| !d.equals("x^2")
-				|| !e.equals("5.0x")
-				|| !f.equals("5.0x^3")) {
-			System.out.println("error: monom func toString");
-		}
-	}
-
-	private static void monomEqualsTest() {
-		Monom m0 = new Monom("3x^2");
+	@Test
+	void testEqualsObject() {
 		Monom m1 = new Monom("3x^2");
-		Monom m2 = new Monom("5");
-
-		if(!(m0.equals(m1) || m0.equals(m2)))
-			System.out.println("error: Monom equals func ");
+		Monom m2 = new Monom("3x^2");
+		String s = "3x^2";
+		boolean isTrue1 = m1.equals(m2);
+		boolean isTrue2 = m1.equals(s);
+		assertTrue(isTrue1);
+		assertTrue(isTrue2);
 	}
 
-	private static void test1() {
-		System.out.println("*****  Test1:  *****");
-		String[] monoms = {"2", "-x","-3.2x^2","0"};
-		for(int i=0;i<monoms.length;i++) {
-			Monom m = new Monom(monoms[i]);
-			String s = m.toString();
-			m = new Monom(s);
-			double fx = m.f(i);
-			System.out.println(i+") "+m +"    \tisZero: "+m.isZero()+"\t f("+i+") = "+fx);
-		}
+	@Test
+	void testInitFromString() {
+		Monom m = new Monom(1,1);
+		function actual = m.initFromString("-2.9x^3");
+		function expected = new Monom("-2.9x^3");
+		assertEquals(actual, expected);
 	}
 
-	private static void test2() {
-		System.out.println("*****  Test2:  *****");
-		ArrayList<Monom> monoms = new ArrayList<Monom>();
-		monoms.add(new Monom(0,5));
-		monoms.add(new Monom(-1,0));
-		monoms.add(new Monom(-1.3,1));
-		monoms.add(new Monom(-2.2,2));
-
-		for(int i=0;i<monoms.size();i++) {
-			Monom m = new Monom(monoms.get(i));
-			String s = m.toString();
-			Monom m1 = new Monom(s);
-			boolean e = m.equals(m1);
-			System.out.println(i+") "+m +"    \tisZero: "+m.isZero()+"  \teq: "+e);
-		}
+	@Test
+	void testCopy() {
+		Monom m = new Monom(-2.9,3);
+		function actual = m.copy();
+		function expected = new Monom("-2.9x^3");
+		assertEquals(actual, expected);
 	}
 }

@@ -1,251 +1,178 @@
-package myMath;
+package Ex1Testing;
 
-import java.util.Iterator;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-public class PolynomTest {
+import Ex1.Monom;
+import Ex1.Polynom;
+import Ex1.Polynom_able;
+import Ex1.function;
 
-	public static void main (String[]args){
-		polyConstructorTest();
-		polyStringConstructorTest();
-		polyAddMonomTest();
-		polyAddPolyTest();
-		polySubstractTest();
-		polyMultiplyTest();
-		polyEqualsTest();
-		polyIsZeroTest();
-		polyRootTest();
-		polyCopyTest();
-		polyDerivativeTest();
-		polyFuncTest();
-		polyToStringTest();
-		polyAreaTest();
-	}
-	public static void polyConstructorTest(){
-		Polynom p1 = new Polynom();
-		Iterator<Monom> itr = p1.iteretor();
-		itr.next();
-		if (itr.hasNext())
-			System.out.println("error: default constructor");
+class PolynomTest {
 
-		Polynom p2 = new Polynom();
-		Monom m1 = new Monom(3,5);
-		Monom m2 = new Monom(2,4);
-		p2.add(m1);
-		p2.add(m2);
-
-		Polynom p2Copy = new Polynom(p2.toString());
-		if(!p2.equals(p2Copy))
-			System.out.println("error: copy constructor");
+	@Test
+	void testPolynom() {
+		Polynom expected = new Polynom();
+		Polynom actual = new Polynom("0");
+		assertEquals(actual, expected);
 	}
 
-	@SuppressWarnings("unused")
-	private static void polyStringConstructorTest () {
-		String [] good = {"3-7+5-2",
-				"x^3 + 5x^2 + x + 4",
-				"-x^3 + 5x^2 +2",
-				"-x^2-5-x^2-x^3-7" ,
-				"0x^5+3",
-				"3x^0-5x", "" };
-		String [] bad = {"(-x^2+(3x^5))","x^2--3x"};
-		for(int i=0; i<good.length; i++) {
-			String c = good[i];
-			Polynom m1 = new Polynom (c);
+	@Test
+	void testPolynomString() {
+		String [] goodStrings = {"3-7+5-2", "-x^3 + 5x^2 +2", "-x^2-5-x^2-x^3-7", "0x^5+3","3x^0-5x", ""};
+		Polynom [] expected = {new Polynom("-1.0"), new Polynom("-x^3+5x^2+2"), new Polynom("-x^3-2x^2-12"), 
+								new Polynom("3.0"), new Polynom("-5x+3"), new Polynom("0")};
+		for(int i=0; i<expected.length; i++) {
+			Polynom actual = new Polynom(goodStrings[i]);
+			assertEquals(actual, expected[i]);
 		}
-		for(int i=0; i<bad.length; i++) {
-			String c = bad[i];
-			boolean ok = true;
+		
+		String [] badString = {"(-x^2+(3x^5))", "x^2--3x", "%$ - X", "xX + (4 - x32"};
+		for(int i=0; i<badString.length; i++) {
 			try {
-				Polynom m2 = new Polynom (c);
-			}
-			catch (Exception e) {
-				ok = false;
-			}
-			if (ok) {
-				System.out.println("error: bad String " + c + " was excepted");
-			}
+				@SuppressWarnings("unused")
+				Polynom toFail = new Polynom(badString[i]);
+			    fail( "the constructor didn't throw exception for bad String" + badString[i]);
+			} 
+			catch (RuntimeException e) {}
+		}	
+	}
+
+	@Test
+	void testInitFromString() {
+		Polynom p = new Polynom("x");
+		function actual = p.initFromString("-2.9x^3+5x^2-x+0");
+		function expected = new Polynom("-2.9x^3+5x^2-x+0");
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	void testToString() {
+		Polynom [] polynoms = {new Polynom("-1"), new Polynom("-x^3+5x^2+2"), new Polynom("-x^3-2x^2-12"), 
+							  new Polynom("-5x+3"), new Polynom("0")};
+		String [] expected = {"-1.0","-x^3+5.0x^2+2.0","-x^3-2.0x^2-12.0","-5.0x+3.0","0"};
+		for(int i=0; i<expected.length; i++) {
+			String actual = polynoms[i].toString();
+			assertEquals(actual, expected[i]);
 		}
 	}
 
-	private static void polyAddMonomTest(){
-		Polynom p = new Polynom("5x^3 + 4x^2 - 3x + 2");
-		Monom m0 = new Monom ();
-		Monom m1 = new Monom (6,4);
-		Monom m2 = new Monom (1,2);
-		Monom m3 = new Monom (3,1);
-		Monom m4 = new Monom (-2,0);
-
-		p.add(m0);
-		p.add(m1);
-		p.add(m2);
-		p.add(m3);
-		p.add(m4);
-
-		Polynom target = new Polynom("6x^4 + 5x^3 + 5x^2");
-		if(!p.equals(target))
-			System.out.println("error: polynom Add Monom func ");
-	}
-
-	private static void polyAddPolyTest() {
-		Polynom p0 = new Polynom("5x^3 + 4x^2 - 3x + 2");
-		Polynom p1 = new Polynom("6x^4 + 2x - 2");
-		Polynom target = new Polynom("6x^4 + 5x^3 + 4x^2 - x");
-
-		p0.add(p1);
-
-		if(!p0.equals(target))
-			System.out.println("error: polynom Add Polynom func ");
-	}
-
-	private static void polySubstractTest() {
-		Polynom p0 = new Polynom("5x^3 + 4x^2 - 3x + 2");
-		Polynom p1 = new Polynom("-6x^4 - 2x + 2");
-		Polynom target = new Polynom("6x^4 + 5x^3 + 4x^2 - x");
-
-		p0.substract(p1);
-
-		if(!p0.equals(target))
-			System.out.println("error: polynom substract func ");
-	}
-
-	private static void polyMultiplyTest() {
-		Polynom p0 = new Polynom("3x^2 + x");
-		Polynom p1 = new Polynom("4x + 2");
-		Polynom target = new Polynom("12x^3 + 10x^2 + 2x");
-
-		p0.multiply(p1);
-
-		if(!p0.equals(target))
-			System.out.println("error: polynom multiply func ");
-	}
-
-	private static void polyEqualsTest() {
-		Polynom p0 = new Polynom("3x^2 + x");
-		Polynom p1 = new Polynom("3x^2 + x");
-		Polynom p2 = new Polynom("3x^3 + 1");
-
-		if(!p0.equals(p1) || p0.equals(p2))
-			System.out.println("error: polynom equals func ");
-	}
-
-	private static void polyIsZeroTest() {
-		Polynom p0 = new Polynom();
-		Polynom p1 = new Polynom("3x^2 + x");
-
-		if (!p0.isZero() || p1.isZero())
-			System.out.println("error: polynom isZero func ");
-	}
-
-	@SuppressWarnings("unused")
-	private static void polyRootTest() {
-		boolean exceptionThrown = false;
-
-		//check if smaller epsilon gives more precise answer
-		Polynom p0 = new Polynom("x"); // cuts x axis at: 0
-		double result1 = p0.root(-0.5 ,2 , 0.5);
-		double result2 = p0.root(-0.5 ,2 , 0.25);
-		double result3 = p0.root(-0.5 ,2 , 0.01);
-		if (Math.abs(result1)<Math.abs(result2) || Math.abs(result2)<Math.abs(result3))
-			System.out.println("error: polynom root func ");
-
-		//check how root handles different cases
-		Polynom p1 = new Polynom("x^3 - x"); // cuts x axis at: -1,0,1. see: https://www.desmos.com/calculator/9fwg0quutq
-		final double eps = 0.01;
-
-		//one cut
-		double cut1 = p1.root(-0.5 , 0.75 , eps);
-
-		//3 cuts
-		double cut2 = p1.root(-1.5 , 2 , eps);
-
-		//x0 || x1 are cuts
-		double cut3 = p1.root(0 , 1.5 , eps);
-		double cut4 = p1.root(-0.5 , 1 , eps);
-
-
-		try {
-			// both x0 && x1 are above x axis or below it
-			double cut5 = p1.root(-1.5, 0.5, eps);
-			double cut6 = p1.root(-0.75, -0.25, eps);
-
-			//no cut
-			double cut7 = p1.root(1.5 , 2 , eps);
-			double cut8 = p1.root(-2, -1.5 , eps);
-
-			//x1<x0
-			double cut9 = p1.root(1.5, 0.5 , eps);
-		}
-		catch (RuntimeException e){
-			exceptionThrown = true;
-		}
-
-		if(!exceptionThrown)
-			System.out.println("error: polynom root func ");
-	}
-
-	private static void polyCopyTest() {
-		Polynom p0 = new Polynom("3x^2 + x");
-		Polynom_able p1 =p0.copy();
-
-		if (!p1.equals(p0))
-			System.out.println("error: polynom copy func ");
-	}
-
-	private static void polyDerivativeTest() {
-		Polynom p = new Polynom("3.5x^3 - 2.3x^2 + 15x - 32");
-		Polynom_able target = new Polynom("10.5x^2 - 4.6x + 15");
-		Polynom_able der = p.derivative();
-
-		if (!der.equals(target))
-			System.out.println("error: polynom derivative func ");
-	}
-
-	private static void polyFuncTest() {
-		Polynom p = new Polynom("3.5x^3 - 2.3x^2 + 15x - 32");
-		double result1 = p.f(-2);
-		double result2 = p.f(0);
-		double result3 = p.f(1);
-		double result4 = p.f(2.5);
-
-		double target1 = -99.2;
-		double target2 = -32;
-		double target3 = -15.8;
-		double target4 = 45.8125;
-
-		if (result1 != target1
-				||result2 != target2
-				||result3 != target3
-				||result4 != target4)
-			System.out.println("error: polynom f func ");
-	}
-
-	private static void polyToStringTest() {
+	@Test
+	void testIsZero() {
 		Polynom p = new Polynom();
-		Polynom p1 = new Polynom("3.5x^3 - 2.3x^2 + 15x - 32");
-
-		if (!p.toString().equals("0")
-				|| !p1.toString().equals("3.5x^3-2.3x^2+15.0x-32.0"))
-			System.out.println("error: polynom toString func ");
+		boolean isTrue = p.isZero(); 
+		assertTrue(isTrue);
 	}
 
-	private static void polyAreaTest() {
-		//check if smaller epsilon gives more precise answer
-		Polynom p0 = new Polynom("-x^2 + 9");
-		double result1 = p0.area(-3 ,3 , 0.5);
-		double result2 = p0.area(-3 ,3 , 0.25);
-		double result3 = p0.area(-3 ,3 , 0.01);
-		final int target1 = 36;
+	@Test
+	void testCopy() {
+		Polynom p = new Polynom("-x^3+5x^2+2");
+		function actual = p.copy();
+		function expected = new Polynom("-x^3+5x^2+2");
+		assertEquals(actual, expected);
+	}
 
-		if (Math.abs(target1-result1)<Math.abs(target1-result2)
-				|| Math.abs(target1-result2)<Math.abs(target1-result3))
-			System.out.println("error: polynom area func ");
+	@Test
+	void testEqualsObject() {
+		Polynom p1 = new Polynom("-x^3+5x^2+2");
+		Polynom p2 = new Polynom("-x^3+5x^2+2");
+		String s = "-x^3+5x^2+2";
+		boolean isTrue1 = p1.equals(p2);
+		boolean isTrue2 = p1.equals(s);
+		assertTrue(isTrue1);
+		assertTrue(isTrue2);
+	}
 
-		//check if area calculates only areas above x axis
-		Polynom p1 = new Polynom("x^3 - x");	//positive at: -1<x<0 && x>1. negative at: 0<x<1 && x<-1
-		final double eps = 0.01;
-		double result4 = p1.area(-1 ,1 , eps);
-		double result5 = p1.area(-1 ,0 , eps);
+	@Test
+	void testAddMonom() {
+		Monom m = new Monom(1, 3);
+		Polynom actual = new Polynom("-x^3+5x^2+2");
+		actual.add(m);
+		Polynom expected = new Polynom("5x^2+2");
+		assertEquals(actual, expected);
+	}
 
-		if (result4 != result5)
-			System.out.println("error: polynom area func ");
+	@Test
+	void testMultiplyMonom() {
+		Monom m = new Monom(-1, 1);
+		Polynom actual = new Polynom("-x^3+5x^2+2");
+		actual.multiply(m);
+		Polynom expected = new Polynom("x^4-5x^3-2x");
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	void testAddPolynom_able() {
+		Polynom p = new Polynom("5x^3+4x^2-3x+2");
+		Polynom actual = new Polynom("6x^4+2x-2");
+		actual.add(p);
+		Polynom expected = new Polynom("6x^4+5x^3+4x^2-x");
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	void testSubstract() {
+		Polynom p = new Polynom("5x^3+4x^2-3x+2");
+		Polynom actual = new Polynom("6x^4+2x-2");
+		actual.substract(p);
+		Polynom expected = new Polynom("6x^4-5x^3-4x^2+5x-4");
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	void testMultiplyPolynom_able() {
+		Polynom p = new Polynom("3x^2+x");
+		Polynom actual = new Polynom("4x+2");
+		actual.multiply(p);
+		Polynom expected = new Polynom("12x^3+10x^2+2x");
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	void testDerivative() {
+		Polynom p = new Polynom("3.5x^3-2.3x^2+15x-32");
+		Polynom_able actual = p.derivative();
+		Polynom_able expected = new Polynom("10.5x^2-4.6x+15");
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	void testF() {
+		Polynom p = new Polynom("3.5x^3-2.3x^2+15x-32");
+		double actual = p.f(11.19);
+		double expected = (3.5*Math.pow(11.19, 3) - 2.3*Math.pow(11.19, 2) + 15*11.19 - 32);
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	void testRoot() {
+		Polynom p = new Polynom("x^3+3x+4.0");
+		double actual = p.root(-2, 2, 0.001);
+		double expected = (-1.0);
+		boolean isTrue = Math.abs(actual-expected) < 0.01;
+		assertTrue(isTrue, "expect to get -1, but get " + actual);
+		
+		try {
+			@SuppressWarnings("unused")
+			double toFail = p.root(2, -2, 0.001);
+		    fail("you entered x0>x1, should be x0<x1");
+		} 
+		catch (IllegalArgumentException e) {}
+	}
+
+	@Test
+	void testArea() {
+		Polynom p = new Polynom("x^3+3x+4.0");
+		double actual = p.area(0, 5, 0.001);
+		double expected = (213.75);
+		boolean isTrue = Math.abs(actual-expected) < 0.1;
+		assertTrue(isTrue, "expect to get 213.75, but get " + actual);
+		
+		try {
+			@SuppressWarnings("unused")
+			double toFail = p.root(2, -2, 0.001);
+		    fail("you entered x0>x1, should be x0<x1");
+		} 
+		catch (IllegalArgumentException e) {}
 	}
 }
