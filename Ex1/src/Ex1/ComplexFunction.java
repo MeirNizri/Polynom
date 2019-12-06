@@ -4,6 +4,7 @@ package Ex1;
  * y and x are real numbers and g is an operation: plus, mul, div, max, min, comp (f1(f2(x))).
 **/
 
+@SuppressWarnings("serial")
 public class ComplexFunction implements complex_function {
 	function leftFunc;
 	function rightFunc;
@@ -11,28 +12,61 @@ public class ComplexFunction implements complex_function {
 	
 	// Default constructor
 	public ComplexFunction() {
-		leftFunc = new Polynom();
-		rightFunc = new Polynom();
-		op = Operation.None;
+		this.leftFunc = new Polynom();
+		this.rightFunc = null;
+		this.op = Operation.None;
 	}
 	
 	// Initial a ComplexFunction
 	public ComplexFunction(Operation op, function leftFunc, function rightFunc) {
 		this.leftFunc = new Polynom();
 		this.rightFunc = new Polynom();
-		this.op = Operation.None;
+		this.op = op;
 	}
 	
-	// Initial a CopmplexFunction from String
+	// Initial a ComplexFunction from String
 	public ComplexFunction(String s) {
-
-		
+		if(s.contains("(")) {
+			String opString = s.substring(0, s.indexOf('('));
+			String rightFuncString = s.substring(s.lastIndexOf(',')+1, s.length()-1);;
+			String leftFuncString = s.substring(s.indexOf('(')+1, s.lastIndexOf(','));;
+			//
+			this.op = operationFromString(opString);
+			this.rightFunc = new Polynom(rightFuncString);
+			this.leftFunc = new ComplexFunction(leftFuncString);
+		}
+		else {
+			this.leftFunc = new Polynom(s);
+			this.rightFunc = null;
+			this.op = Operation.None;
+		}
+	}
+	
+	public Operation operationFromString(String s) {
+		switch(s) {
+			case "Plus":
+			    return Operation.Plus;
+			case "Times":
+			    return Operation.Times;
+			case "Divid":
+			    return Operation.Divid;
+			case "Max":
+			    return Operation.Max;
+			case "Min":
+			    return Operation.Min;
+			case "Comp":
+			    return Operation.Comp;
+			case "None":
+			    return Operation.None;
+			default:
+				return Operation.Error;
+		}
 	}
 
 	@Override
 	public function initFromString(String s) {
-		// TODO Auto-generated method stub
-		return null;
+		function f = new ComplexFunction(s);
+		return f;
 	}
 
 	/** returns the left side of the complex function - this side should always exists (should NOT be null).
@@ -62,8 +96,8 @@ public class ComplexFunction implements complex_function {
 
 	@Override
 	public function copy() {
-		// TODO Auto-generated method stub
-		return null;
+		function f = new ComplexFunction(this.getOp(), this.left(), this.right());
+		return f;
 	}
 	
 	/** Add to this complex_function the f1 complex_function
@@ -72,8 +106,8 @@ public class ComplexFunction implements complex_function {
 	@Override
 	public void plus(function f1) {
 		// TODO Auto-generated method stub
-
 	}
+	
 	/** Multiply this complex_function with the f1 complex_function
 	 * @param f1 the complex_function which will be multiply be this complex_function.
 	 */
