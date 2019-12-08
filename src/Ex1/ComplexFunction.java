@@ -7,11 +7,11 @@ package Ex1;
 public class ComplexFunction implements complex_function {
 	
 	/** The left function */
-	function leftFunc;
+	private function leftFunc;
 	/** The right function */
-	function rightFunc;
+	private function rightFunc;
 	/** The operation */
-	Operation op;
+	private Operation op;
 	
 	/**
 	 * Default constructor
@@ -36,7 +36,22 @@ public class ComplexFunction implements complex_function {
 	 * Initialize a complexFunction
 	 * @param f1 the left function
 	 * @param f2 the right function
-	 * @param operation the left function
+	 * @param operation
+	 */
+	public ComplexFunction(Operation operation, function f1, function f2) {
+		this.leftFunc = f1;
+		this.rightFunc = f2;
+		this.op = operation;
+		// Ensures that if the right function is null then the operation must be 'None'
+		if(rightFunc==null && op!=Operation.None)
+			throw new IllegalArgumentException("The operation can't be different than 'None' when the right function is null");
+	}
+	
+	/**
+	 * Initialize a complexFunction
+	 * @param f1 the left function
+	 * @param f2 the right function
+	 * @param operation
 	 */
 	public ComplexFunction(String operation, function f1, function f2) {
 		this.leftFunc = f1;
