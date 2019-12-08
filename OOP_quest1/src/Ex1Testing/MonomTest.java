@@ -2,6 +2,7 @@ package Ex1Testing;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
 import Ex1.Monom;
 import Ex1.function;
 

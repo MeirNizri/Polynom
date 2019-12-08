@@ -19,7 +19,7 @@ class PolynomTest {
 
 	@Test
 	void testPolynomString() {
-		String [] goodStrings = {"3-7+5-2", "-x^3 + 5x^2 +2", "-x^2-5-x^2-x^3-7", "0x^5+3","3x^0-5x", ""};
+		String [] goodStrings = {"3-7+5-2", "-x^3 + 5x^2 +2", "-x^2-5-x^2-x^3-7", "0x^5+3", "3x^0-5x", ""};
 		Polynom [] expected = {new Polynom("-1.0"), new Polynom("-x^3+5x^2+2"), new Polynom("-x^3-2x^2-12"), 
 								new Polynom("3.0"), new Polynom("-5x+3"), new Polynom("0")};
 		for(int i=0; i<expected.length; i++) {

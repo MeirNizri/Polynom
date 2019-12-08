@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-// TODO: Auto-generated Javadoc
 /**
  * This  class represents a general Polynom: f(x) = a_1X^b_1 + a_2*X^b_2 +...+ a_n*Xb_n,
  * where: a_1, a_2 ... a_n are real numbers and b_1, b_2 ... b_n are integer (summed a none negative).
@@ -145,14 +144,13 @@ public class Polynom implements Polynom_able {
 
 	/**
 	 * Test if this Polynom is logically equals to p1.
-	 * @param p1 Polynom
+	 * @param p1 object
 	 * @return true iff this polynom represents the same function as p1
 	 */
 	@Override
 	public boolean equals (Object p1) {
 		try {
-			Polynom p2 = new Polynom(p1.toString());
-			
+			Polynom p2 = new Polynom(p1.toString());	
 			// traverse p2 and this Polynom with iterator equally
 			Iterator<Monom> itr1 = this.iteretor();
 			Iterator<Monom> itr2 = p2.iteretor();
@@ -286,7 +284,6 @@ public class Polynom implements Polynom_able {
 
 	/**
 	 * calculate the value of the polynom when inserted value of x.
-	 *
 	 * @param x double
 	 * @return the value of the polynom
 	 */

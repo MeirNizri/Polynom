@@ -167,7 +167,7 @@ public class Monom implements function {
 				this.set_power(Integer.parseInt(powStr));
 		}
 		catch (NumberFormatException e){
-            throw new NumberFormatException("ERR: got wrong format String for Monom");
+            throw new IllegalArgumentException("ERR: got wrong format String: " + coefStr+ " , " + powStr);
 		}
 	}
 

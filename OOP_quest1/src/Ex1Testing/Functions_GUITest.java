@@ -1,7 +1,6 @@
 package Ex1Testing;
 
 import org.junit.jupiter.api.BeforeEach;
-import Ex1.*;
 import org.junit.jupiter.api.Test;
 
 import Ex1.ComplexFunction;
