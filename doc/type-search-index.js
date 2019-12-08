@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"myMath","l":"cont_function"},{"p":"myMath","l":"function"},{"p":"myMath","l":"Monom"},{"p":"myMath","l":"Monom_Comperator"},{"p":"myMath","l":"Polynom"},{"p":"myMath","l":"Polynom_able"}]
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"Ex1","l":"ComplexFunction"},{"p":"Ex1","l":"Monom"},{"p":"Ex1","l":"Polynom"}]
