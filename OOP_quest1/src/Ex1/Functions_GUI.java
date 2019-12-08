@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class Functions_GUI implements functions {
+public class Functions_GUI implements functions{
+
+	public Functions_GUI() {
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public int size() {
@@ -81,31 +85,30 @@ public class Functions_GUI implements functions {
 	@Override
 	public void clear() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void initFromFile(String file) throws IOException {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void saveToFile(String file) throws IOException {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void drawFunctions(int width, int height, Range rx, Range ry, int resolution) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void drawFunctions(String json_file) {
 		// TODO Auto-generated method stub
-
+		
 	}
-
 }
