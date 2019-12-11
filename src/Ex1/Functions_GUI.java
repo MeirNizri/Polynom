@@ -1,4 +1,4 @@
-
+package Ex1;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -23,9 +23,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
+
 
 public class Functions_GUI implements functions {
 	private ArrayList<function> Functions;
