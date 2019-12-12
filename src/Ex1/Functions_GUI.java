@@ -25,81 +25,134 @@ import org.json.simple.parser.ParseException;
 
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Functions_GUI.
+ */
 public class Functions_GUI implements functions {
+	
+	/** The Functions. */
 	private ArrayList<function> Functions;
+	
+	/**
+	 * Instantiates a new functions GUI.
+	 */
 	public Functions_GUI() {
 		Functions=new ArrayList<>();
-		Functions.add(new ComplexFunction());
+		
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.util.Collection#size()
+	 */
 	@Override
 	public int size() {
 		return Functions.size();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#isEmpty()
+	 */
 	@Override
 	public boolean isEmpty() {
 		return Functions.isEmpty();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#contains(java.lang.Object)
+	 */
 	@Override
 	public boolean contains(Object o) {
 		return Functions.contains(o);	
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#iterator()
+	 */
 	@Override
 	public Iterator<function> iterator() {
 		return Functions.iterator();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#toArray()
+	 */
 	@Override
 	public Object[] toArray() {
 
 		return Functions.toArray();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#toArray(java.lang.Object[])
+	 */
 	@Override
 	public <T> T[] toArray(T[] a) {
 		return Functions.toArray(a);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#add(java.lang.Object)
+	 */
 	@Override
 	public boolean add(function e) {
 		return Functions.add(e);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#remove(java.lang.Object)
+	 */
 	@Override
 	public boolean remove(Object o) {
 		return Functions.remove(o);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#containsAll(java.util.Collection)
+	 */
 	@Override
 	public boolean containsAll(Collection<?> c) {
 		return Functions.containsAll(c);
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#addAll(java.util.Collection)
+	 */
 	@Override
 	public boolean addAll(Collection<? extends function> c) {
 		return Functions.addAll(c);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#removeAll(java.util.Collection)
+	 */
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		return Functions.removeAll(c);
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#retainAll(java.util.Collection)
+	 */
 	@Override
 	public boolean retainAll(Collection<?> c) {
 		return Functions.retainAll(c);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Collection#clear()
+	 */
 	@Override
 	public void clear() {
 		Functions.clear();
 
 	}
 
+	/* (non-Javadoc)
+	 * @see Ex1.functions#initFromFile(java.lang.String)
+	 */
 	@Override
 	public void initFromFile(String file) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -112,6 +165,9 @@ public class Functions_GUI implements functions {
 		bufferedReader.close();
 	}
 
+	/* (non-Javadoc)
+	 * @see Ex1.functions#saveToFile(java.lang.String)
+	 */
 	@Override
 	public void saveToFile(String file) throws IOException {
 		BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(file));
@@ -123,6 +179,9 @@ public class Functions_GUI implements functions {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see Ex1.functions#drawFunctions(int, int, Ex1.Range, Ex1.Range, int)
+	 */
 	@Override
 	public void drawFunctions(int width, int height, Range rx, Range ry, int resolution) {
 		StdDraw.setCanvasSize(width,height);
@@ -139,28 +198,40 @@ public class Functions_GUI implements functions {
 		}
 		StdDraw.setXscale(rx.get_min(),rx.get_max());
 		StdDraw.setYscale(ry.get_min(),ry.get_max());
-
+		
+		
+		//Setting the horizontal and vertical lines
 		StdDraw.setPenColor(Color.LIGHT_GRAY);
-		for (int i = 1; i <resolution+1; i++) {
-			StdDraw.line(x[i],ry.get_min(),x[i],ry.get_max());
+		for (double i = rx.get_min(); i <=rx.get_max(); i++) {
+			StdDraw.line(i,ry.get_min(),i,ry.get_max());
 		}
-		//////// horizontal lines
+		
 		for (double i =ry.get_min(); i <=ry.get_max(); i=i+1) {
 			StdDraw.line(rx.get_min(),i,rx.get_max(), i);
 		}
+		
+		//Paints the Y and X axises with numbers
 		StdDraw.setPenColor(Color.BLACK);
 		StdDraw.setPenRadius(0.005);
-		StdDraw.line(rx.get_min(),x[resolution/2],rx.get_max(),x[resolution/2]);
+		StdDraw.line(rx.get_min(),0,rx.get_max(),0);
+		StdDraw.line(0,ry.get_min(),0,ry.get_max());
 		StdDraw.setFont(new Font("TimesRoman", Font.BOLD, 15));
-		//x initialize
-		for (int i = 1; i < resolution+1; i=i+1) {
-			StdDraw.text(x[i]-0.07, -0.30, Integer.toString(((int)x[i])));
-		}
-		StdDraw.line(x[resolution/2],ry.get_min(),x[resolution/2],ry.get_max());
+		int RangeY=(int)((ry.get_max()-ry.get_min())/20);
+		int RangeX=(int)((rx.get_max()-rx.get_min())/20);
+		
+		for (int i =RangeX,j=-RangeX;( i <=rx.get_max()||j>=rx.get_min()); i+=RangeX,j-=RangeX) {
+			if(i<=rx.get_max()) StdDraw.text(i-0.30, -0.30, Integer.toString(i));
+			if(j>=rx.get_min())StdDraw.text(j-0.30, -0.30, Integer.toString(j));
+		}	
+		//y numbers
 
-		for (int i =((int)ry.get_min()); i <= ry.get_max(); i=i+1) {
-			StdDraw.text(x[resolution/2]-0.07, i-0.30,Integer.toString(i));
+		for (int i =RangeY,j=-RangeY;( i <=ry.get_max()||j>=ry.get_min()); i+=RangeY,j-=RangeY) {
+			if(i<=ry.get_max()) StdDraw.text(0-0.30, i-0.30,Integer.toString(i));
+			if(j>=ry.get_min()) StdDraw.text(0-0.30, j-0.30,Integer.toString(j));
 		}
+		
+		 
+		
 
 		for (int i = 0;i<Functions.size(); i++) {
 			Color RandomColor= new Color((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255));
@@ -179,6 +250,9 @@ public class Functions_GUI implements functions {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see Ex1.functions#drawFunctions(java.lang.String)
+	 */
 	@Override
 	public void drawFunctions(String json_file) throws IOException,ParseException  {
 		int Width=0,Height=0,Resolution=0;//our paramateres
