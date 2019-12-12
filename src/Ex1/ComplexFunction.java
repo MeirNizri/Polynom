@@ -56,6 +56,7 @@ public class ComplexFunction implements complex_function {
 	public ComplexFunction(String operation, function f1, function f2) {
 		this.leftFunc = f1;
 		this.rightFunc = f2;
+		operation.toLowerCase();
 		this.op = operationFromString(operation);
 		// Ensures that if the right function is null then the operation must be 'None'
 		if(rightFunc==null && op!=Operation.None)
@@ -69,6 +70,7 @@ public class ComplexFunction implements complex_function {
 	public ComplexFunction(String s) {
 		// Remove spaces and check if the parenthesis are balanced
 		s = s.replaceAll("\\s", "");
+		s = s.toLowerCase();
 		if (!isValidString(s))
 			throw new IllegalArgumentException("The parenthesis in the String you entered is not valid");
 		// Find the appropriate String for every class variable
@@ -148,13 +150,15 @@ public class ComplexFunction implements complex_function {
 	 */
 	public Operation operationFromString(String s) {
 		switch(s) {
-			case "Plus":  return Operation.Plus;
-			case "Times": return Operation.Times;
-			case "Divid": return Operation.Divid;
-			case "Max":   return Operation.Max;
-			case "Min":   return Operation.Min;
-			case "Comp":  return Operation.Comp;
-			case "None":  return Operation.None;
+			case "plus":  return Operation.Plus;
+			case "mul":   return Operation.Times;
+			case "times": return Operation.Times;
+			case "div":   return Operation.Divid;
+			case "divid": return Operation.Divid;
+			case "max":   return Operation.Max;
+			case "min":   return Operation.Min;
+			case "comp":  return Operation.Comp;
+			case "none":  return Operation.None;
 			case "":      return Operation.None;
 			default:      return Operation.Error;
 		}
@@ -222,12 +226,12 @@ public class ComplexFunction implements complex_function {
 	 */
 	public String operationToString(Operation op) {
 		switch(op) {
-			case Plus:  return "Plus";
-			case Times: return "Times";
-			case Divid: return "Divid";
-			case Max:   return "Max";
-			case Min:   return "Min";
-			case Comp:  return "Comp";
+			case Plus:  return "plus";
+			case Times: return "mul";
+			case Divid: return "div";
+			case Max:   return "max";
+			case Min:   return "min";
+			case Comp:  return "comp";
 			case None:  return "";
 			default:    return "Error";
 		}
