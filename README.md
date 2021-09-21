@@ -1,10 +1,10 @@
-# OOP_Ex1
+# Polynom
 #### Authors: Meir Nizri and Avihay Bernholtz
 
-This repository represents a mathematical function, which is the main interface, which can be a single monom, polynomial, or complex function. In addition, you can build an object that expresses a collection of functions.
+This repository represents a mathematical function, which can be a single monom, polynom, or complex function. In addition, you can build an object that represents a collection of functions.
 
 ### **Monom**
-The Monom class represents a simple monom of shape ax^b, where a is a real number and b is an integer (summed a none negative), see: https://en.wikipedia.org/wiki/Monomial. We defined monom so that there can be spaces everywhere (e,g: 2 x ^ 3), as long as the main structure we described is preserved. Writing capital 'X' instead of 'x' will cause an exception.
+The Monom class represents a simple monom of shape ax^b, where _a_ is a real number and _b_ is an integer, see: https://en.wikipedia.org/wiki/Monomial. Writing capital 'X' instead of 'x' will cause an exception.
 There are some special monoms:
 1. Real number followed by x - the power of the monom is 1.
 2. Real number only - the power of the monom is 0.
